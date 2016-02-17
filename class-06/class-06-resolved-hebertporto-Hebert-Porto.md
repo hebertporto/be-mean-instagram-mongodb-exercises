@@ -6,6 +6,105 @@ Autor: Hebert Porto
 vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.find({ name: /pikachu/i }).explain('executionStats').executionStats.totalDocsExamined
 610
 
+vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.find({ name: /pikachu/i }).explain('executionStats').executionStats.totalDocsExamined
+1
+
+vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.find({ name: /pikachu/i }).explain('executionStats')
+{
+  "queryPlanner": {
+    "plannerVersion": 1,
+    "namespace": "be-mean.pokemons",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "name": /pikachu/i
+    },
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "filter": {
+          "name": /pikachu/i
+        },
+        "keyPattern": {
+          "name": 1
+        },
+        "indexName": "name_1",
+        "isMultiKey": false,
+        "direction": "forward",
+        "indexBounds": {
+          "name": [
+            "[\"\", {})",
+            "[/pikachu/i, /pikachu/i]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [ ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 610,
+    "totalDocsExamined": 1,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0,
+      "works": 611,
+      "advanced": 1,
+      "needTime": 609,
+      "needFetch": 0,
+      "saveState": 4,
+      "restoreState": 4,
+      "isEOF": 1,
+      "invalidates": 0,
+      "docsExamined": 1,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "filter": {
+          "name": /pikachu/i
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 0,
+        "works": 610,
+        "advanced": 1,
+        "needTime": 609,
+        "needFetch": 0,
+        "saveState": 4,
+        "restoreState": 4,
+        "isEOF": 1,
+        "invalidates": 0,
+        "keyPattern": {
+          "name": 1
+        },
+        "indexName": "name_1",
+        "isMultiKey": false,
+        "direction": "forward",
+        "indexBounds": {
+          "name": [
+            "[\"\", {})",
+            "[/pikachu/i, /pikachu/i]"
+          ]
+        },
+        "keysExamined": 610,
+        "dupsTested": 0,
+        "dupsDropped": 0,
+        "seenInvalidated": 0,
+        "matchTested": 1
+      }
+    }
+  },
+  "serverInfo": {
+    "host": "vagrant-ubuntu-trusty-64",
+    "port": 27017,
+    "version": "3.0.9",
+    "gitVersion": "20d60d3491908f1ae252fe452300de3978a040c7"
+  },
+  "ok": 1
+}
+
 ```
 
 ## 2. Criar um `index` um para o campo `name`
@@ -23,6 +122,9 @@ vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.createIndex({name: 1
 ```js
 vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.find({ name: /pikachu/i }).explain('executionStats').executionStats.executionTimeMillis
 0
+
+vagrant-ubuntu-trusty-64(mongod-3.0.9) be-mean> db.pokemons.find({ name: /pikachu/i }).explain('executionStats').executionStats.totalDocsExamined
+1
 ```
 
 ## 4. Fazer uma query para dois campos juntos utilizando `explain` para ver o resultado da busca
